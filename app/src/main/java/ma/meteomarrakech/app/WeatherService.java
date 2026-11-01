@@ -2,6 +2,7 @@ package ma.meteomarrakech.app;
 
 import android.app.*;
 import android.content.*;
+import android.media.AudioAttributes;
 import android.os.*;
 import android.speech.tts.TextToSpeech;
 import java.net.*;
@@ -43,7 +44,13 @@ public class WeatherService extends Service {
                 int result = tts.setLanguage(Locale.FRANCE);
                 ttsReady = result != TextToSpeech.LANG_MISSING_DATA
                     && result != TextToSpeech.LANG_NOT_SUPPORTED;
+
                 if (ttsReady) {
+                    AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_ALARM)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                        .build();
+                    tts.setAudioAttributes(audioAttributes);
                     speak("Le service météo de Marrakech Ménara est activé.");
                 }
             }
@@ -151,7 +158,16 @@ public class WeatherService extends Service {
 
     private void speak(String message) {
         if (ttsReady && tts != null) {
-            tts.speak(message, TextToSpeech.QUEUE_ADD, null);
+            int volume = getSharedPreferences(
+                "meteo_settings", MODE_PRIVATE
+            ).getInt("voice_volume", 70);
+
+            float level = Math.max(0, Math.min(100, volume)) / 100f;
+
+            Bundle params = new Bundle();
+            params.putFloat(TextToSpeech.Engine.KEY_PARAM_VOLUME, level);
+
+            tts.speak(message, TextToSpeech.QUEUE_ADD, params, null);
         }
     }
 
