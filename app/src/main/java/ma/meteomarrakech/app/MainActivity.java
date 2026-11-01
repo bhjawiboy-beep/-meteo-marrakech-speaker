@@ -69,9 +69,7 @@ public class MainActivity extends Activity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 updateVolumeLabel(progress);
-                if (fromUser) {
-                    preferences.edit().putInt("voice_volume", progress).apply();
-                }
+                preferences.edit().putInt("voice_volume", progress).apply();
             }
 
             @Override
