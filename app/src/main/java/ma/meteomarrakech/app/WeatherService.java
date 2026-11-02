@@ -47,7 +47,7 @@ public class WeatherService extends Service {
 
                 if (ttsReady) {
                     AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_ALARM)
+                        .setUsage(AudioAttributes.USAGE_NOTIFICATION)
                         .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
                         .build();
                     tts.setAudioAttributes(audioAttributes);
