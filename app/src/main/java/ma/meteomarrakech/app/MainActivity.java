@@ -100,6 +100,22 @@ public class MainActivity extends Activity {
 
         layout.addView(volumeButtons);
 
+        Button testVoice = new Button(this);
+        testVoice.setText("Tester la voix");
+        testVoice.setOnClickListener(v -> {
+            Intent intent = new Intent(this, WeatherService.class);
+            intent.setAction(WeatherService.ACTION_TEST);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(intent);
+            } else {
+                startService(intent);
+            }
+
+            Toast.makeText(this, "Test vocal en cours...", Toast.LENGTH_SHORT).show();
+        });
+        layout.addView(testVoice);
+
         Button start = new Button(this);
         start.setText("Démarrer le service météo");
         start.setOnClickListener(v -> {

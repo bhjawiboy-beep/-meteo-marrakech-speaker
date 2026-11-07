@@ -18,6 +18,7 @@ import org.json.*;
 public class WeatherService extends Service {
 
     private static final String CHANNEL = "meteo_marrakech";
+    public static final String ACTION_TEST = "ma.meteomarrakech.app.TEST_VOICE";
 
     private ScheduledExecutorService scheduler;
     private TextToSpeech tts;
@@ -314,6 +315,20 @@ public class WeatherService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        if (intent != null && ACTION_TEST.equals(intent.getAction())) {
+            if (scheduler != null) {
+                scheduler.execute(() -> {
+                    Calendar cal = Calendar.getInstance(
+                        TimeZone.getTimeZone("Africa/Casablanca")
+                    );
+
+                    int hour = cal.get(Calendar.HOUR_OF_DAY);
+                    fetchWeather(hour);
+                });
+            }
+        }
+
         return START_STICKY;
     }
 
